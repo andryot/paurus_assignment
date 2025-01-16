@@ -1,25 +1,17 @@
 package com.example.paurus_assignment.service;
 
-
 import com.example.paurus_assignment.model.TaxResponse;
 import com.example.paurus_assignment.model.TaxationRequest;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TaxService {
-
     private static final double taxRate = 10;
-    private static  final double generalTaxAmount = 2;
-    private static  final double winningsTaxAmount = 1;
-
+    private static final double generalTaxAmount = 2;
+    private static final double winningsTaxAmount = 1;
 
     public TaxResponse calculateTax(TaxationRequest taxationRequest) {
-        final TaxationType taxationType;
-
-        taxationType = switch (taxationRequest.traderId()){
-            case 2 -> TaxationType.winnings;
-            default -> TaxationType.general;
-        };
+        final TaxationType taxationType = determineTaxationType(taxationRequest.traderId());
 
         return switch (taxationType) {
             case general -> calculateTaxGeneral(taxationRequest);
@@ -28,17 +20,15 @@ public class TaxService {
     }
 
     private TaxResponse calculateTaxGeneral(TaxationRequest request) {
-        double odd = request.odd();
-        double playedAmount = request.playedAmount();
+        final double odd = request.odd();
+        final double playedAmount = request.playedAmount();
 
-        double totalWinning = playedAmount * odd;
+        final double possibleReturnAmountBeforeTax = playedAmount * odd;
+        final double taxAmount = possibleReturnAmountBeforeTax * (taxRate / 100);
 
-        double taxAmount = totalWinning * (taxRate / 100);
+        final double possibleReturnAmount = possibleReturnAmountBeforeTax - generalTaxAmount;
 
-        double possibleReturnAmount = totalWinning - generalTaxAmount;
-
-        double possibleReturnAmountBeforeTax = totalWinning - playedAmount;
-        double possibleReturnAmountAfterTax = totalWinning - taxAmount;
+        final double possibleReturnAmountAfterTax = possibleReturnAmountBeforeTax - taxAmount;
 
         return new TaxResponse(
                 possibleReturnAmount,
@@ -48,20 +38,22 @@ public class TaxService {
                 taxAmount
         );
     }
+
     private TaxResponse calculateTaxWinnings(TaxationRequest request) {
-        double odd = request.odd();
-        double playedAmount = request.playedAmount();
+        final double odd = request.odd();
+        final double playedAmount = request.playedAmount();
 
-        double totalWinning = playedAmount * odd;
+        final double possibleReturnAmountBeforeTax = playedAmount * odd;
 
-        double winningsAmount = totalWinning - playedAmount;
+        final double winningsAmount = possibleReturnAmountBeforeTax - playedAmount;
 
-        double taxAmount = winningsAmount * (winningsTaxAmount / 100);
+        final double taxAmount = winningsAmount * (taxRate / 100);
 
-        double possibleReturnAmount = totalWinning - winningsTaxAmount;
+        // this one feels weird in the instructions. I think it should be same as in the general taxation
+        // -> possibleReturnAmount = possibleReturnAmountBeforeTax - winningsTaxAmount;
+        final double possibleReturnAmount = winningsAmount - winningsTaxAmount;
 
-        double possibleReturnAmountBeforeTax = totalWinning - playedAmount;
-        double possibleReturnAmountAfterTax = possibleReturnAmount - winningsTaxAmount;
+        final double possibleReturnAmountAfterTax = possibleReturnAmountBeforeTax - taxAmount;
 
         return new TaxResponse(
                 possibleReturnAmount,
@@ -72,5 +64,10 @@ public class TaxService {
         );
     }
 
-    public enum TaxationType {general, winnings,}
+    public enum TaxationType {general, winnings;}
+
+    // mocked determination of Taxation type based on traderId
+    private TaxationType determineTaxationType(int traderId) {
+        return (traderId % 2 == 1) ? TaxationType.general : TaxationType.winnings;
+    }
 }
