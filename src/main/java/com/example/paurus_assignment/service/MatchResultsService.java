@@ -21,7 +21,7 @@ public class MatchResultsService {
         this.matchResultsRepository = matchResultsRepository;
     }
 
-    public void insertMatchResultRequest(List<MatchResultRequest> matchResultRequests) {
+    public void insertMatchResultRequests(List<MatchResultRequest> matchResultRequests) {
         final Stream<MatchResultRequest> matchResults = matchResultRequests.stream().sorted();
 
         try {
@@ -35,8 +35,8 @@ public class MatchResultsService {
 
 
             try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/assignment_db", "admin","password")) {
-                PGConnection pgConnection = connection.unwrap(PGConnection.class);
-                CopyManager copyManager = pgConnection.getCopyAPI();
+              final PGConnection pgConnection = connection.unwrap(PGConnection.class);
+              final CopyManager copyManager = pgConnection.getCopyAPI();
 
                 try (ByteArrayInputStream inputStream = new ByteArrayInputStream(buffer.toString().getBytes())) {
                     copyManager.copyIn(copyCommand, inputStream);

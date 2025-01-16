@@ -1,17 +1,17 @@
 # Instructions
-## Part 1
-- open 
-## Part 2
 ### 1. In terminal run:
 docker run --name assignment_db -p 5432:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=password -e POSTGRES_DB=assignment_db -d postgres:latest
 
-## 2. locate the .jar file and run
-java -jar 'file_name.jar'
+## 2. locate the paurus_assignment.jar file and run in terminal
+java -jar paurus_assignment.jar
 
-#### example: java -jar target/paurus_assignment-0.0.1-SNAPSHOT.jar
+## Part 1
+- import postman_collection.json to postman for testing the endpoint 
+- If traderId is even I used the general taxation and else the winnings taxation
 
-
-# Notes
+## Part 2
+### Notes
+- the insertion will be executed on runtime
 - min and max 'date_insert' are printed in the console
-- I used copy method for inserting so the date_insert is the same in all entries
+- I used copy method for inserting so that is why the date_insert is the same in all entries
 

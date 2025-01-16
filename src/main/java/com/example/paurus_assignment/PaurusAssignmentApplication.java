@@ -43,7 +43,7 @@ public class PaurusAssignmentApplication implements CommandLineRunner {
 					String specifiers = parts.length > 3 ? parts[3] : null;
 
 					// Not sure if we should exclude the lines that don't contain 'match'
-					// and also if we need to extract the integer part as ordering by string will
+					// and also if we need to extract the integer part as ordering by string will be
 					// "wrong"
 					//if (!parts[0].contains("match")) continue;
 
@@ -75,5 +75,4 @@ public class PaurusAssignmentApplication implements CommandLineRunner {
 			e.printStackTrace();
 		}
 	}
-
 }

@@ -20,7 +20,7 @@ public class MatchResultsController {
     @PostMapping("/insert")
     @ResponseStatus(HttpStatus.CREATED)
     public void insert(@RequestBody List<MatchResultRequest> matchResultRequests) {
-        matchResultsService.insertMatchResultRequest(matchResultRequests);
+        matchResultsService.insertMatchResultRequests(matchResultRequests);
     }
 
 }
